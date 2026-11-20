@@ -102,14 +102,9 @@ footer{text-align:center;color:var(--muted);font-size:10px;padding:14px 0 0}
 .character-controls button{border:1px solid rgba(100,255,150,.55);background:rgba(3,22,10,.8);color:#baffca;padding:10px 15px;font-size:14px;font-weight:700;letter-spacing:.03em;box-shadow:0 0 18px rgba(35,255,112,.12);cursor:pointer}
 .character-controls button:hover{background:rgba(12,55,26,.92);box-shadow:0 0 22px rgba(35,255,112,.28)}
 .character-controls span{font-size:11px;color:var(--muted)}
-.expert-answer{display:none;margin:0 8px 14px 0;padding:13px 15px;border:1px solid rgba(65,255,130,.36);background:rgba(0,18,8,.68);box-shadow:inset 0 0 22px rgba(28,255,100,.07),0 0 18px rgba(20,255,90,.08)}
-.expert-answer strong{display:block;color:#8affad;font:700 11px ui-monospace,monospace;letter-spacing:.12em;margin-bottom:7px}
-.expert-answer p{margin:0;color:#d8ffe2;font-size:14px;line-height:1.7}
-.character-console.expert-mode .expert-answer{display:block;animation:answer-appear .55s .35s both}
-@keyframes answer-appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 body.matrix-boost .matrix-bg{opacity:1}
 @media(max-width:599px){.character-stage{height:310px}.dende-character{width:82%;height:92%;left:9%}.character-stage.expert-mode .dende-character{transform:translateX(-4%) scale(.48)}.vegeta-character{width:72%}.character-stage.expert-mode .vegeta-character{right:0}.arrival-label{top:7px;left:6px}}
-@media(prefers-reduced-motion:reduce){.character,.digital-surge,.expert-answer{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.character,.digital-surge{animation:none!important;transition:none!important}}
 
 /* Materialize the expert from Matrix data instead of sliding in */
 .character-stage.teleporting .digital-surge{opacity:1;animation:matrix-gather 1.65s ease-out both}
@@ -158,9 +153,9 @@ footer{display:none}
     <div class="arrival-label" aria-live="polite"><span class="status-dot"></span><span id="character-status">DENDE / GUIDE</span></div>
   </div>
   <div class="character-controls"><button type="button" id="expert-toggle" aria-pressed="false">ベジータを呼び出す</button><span>※ 表示演出の確認用デモ</span></div>
-  <div class="expert-answer" id="expert-answer" aria-live="polite"><strong>ベジータの回答エリア</strong><p>専門家が登場すると、ここに回答が表示されます。</p></div>
-</section>
-<section class="chat" id="chat" aria-live="polite"><div class="welcome"><strong>こんにちは。デンデです。</strong><p>知りたいことをそのまま入力してください。質問に応じてデンデが必要な専門知識や道具を選ぶ仕組みです。</p></div></section>
+  </section>
+<section class="chat" id="chat" aria-live="polite"><div class="message"><div class="speaker">デンデ</div><div class="bubble">こんにちは。デンデです。
+知りたいことをそのまま入力してください。質問に応じて、必要な専門家を呼び出してお手伝いします。</div></div></section>
 <form class="composer" id="chat-form"><div class="composer-box"><textarea id="message-input" rows="1" maxlength="2000" placeholder="質問を入力…" aria-label="質問を入力"></textarea><button class="send" id="send-button" type="submit" aria-label="送信">↑</button></div></form>
 <footer>TENKAICHI · 専門家たちが集う知識プラットフォーム</footer>
 </main>
@@ -182,11 +177,9 @@ form.addEventListener("submit",(event)=>{event.preventDefault();const message=in
 (function(){
   function initTenkaichiDemo(){
     const stage=document.getElementById('character-stage');
-    const panel=document.getElementById('character-console');
     const button=document.getElementById('expert-toggle');
     const status=document.getElementById('character-status');
-    const answer=document.getElementById('expert-answer');
-    if(!stage||!panel||!button||!status||!answer) return;
+    if(!stage||!button||!status) return;
     if(button.dataset.bound==='1') return;
     button.dataset.bound='1';
     let active=false;
@@ -201,12 +194,9 @@ form.addEventListener("submit",(event)=>{event.preventDefault();const message=in
       }
       matrixBoost=active;
       document.body.classList.toggle('matrix-boost',active);
-      panel.classList.toggle('expert-mode',active);
       button.setAttribute('aria-pressed',String(active));
       button.textContent=active?'デンデに戻す':'ベジータを呼び出す';
       status.textContent=active?'VEGETA / EXPERT CONNECTED':'DENDE / GUIDE';
-      answer.querySelector('strong').textContent=active?'VEGETA / RESPONSE':'ベジータの回答エリア';
-      answer.querySelector('p').textContent=active?'フン。この質問ならオレに任せておけ。専門家が回答する際は、この位置に実際の回答が表示される。':'専門家が登場すると、ここに回答が表示されます。';
       document.documentElement.classList.toggle('expert-mode-active',active);
       const canvas=document.getElementById('matrix-bg');
       if(canvas) canvas.style.opacity=active?'1':'.78';
