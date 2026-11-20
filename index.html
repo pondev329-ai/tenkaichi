@@ -123,6 +123,27 @@ body.matrix-boost .matrix-bg{opacity:1}
 @media(max-width:599px){.character-stage.teleporting .digital-surge:before,.character-stage.teleporting .digital-surge:after{left:64%}}
 @media(prefers-reduced-motion:reduce){.character-stage.teleporting .vegeta-character,.character-stage.teleporting .digital-surge,.character-stage.teleporting .digital-surge:before,.character-stage.teleporting .digital-surge:after{animation:none!important}}
 
+
+/* Keep the character area fixed while only the conversation scrolls */
+html,body{height:100%;overflow:hidden}
+.app{height:100vh;height:100dvh;min-height:0;overflow:hidden}
+header{flex:0 0 auto}
+.character-console{flex:0 0 auto;padding:4px 0 8px}
+.character-stage{height:250px;padding:0;flex:0 0 auto}
+.character-controls{padding-bottom:8px}
+.chat{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 4px 18px 0;scrollbar-width:thin;scrollbar-color:rgba(57,255,117,.45) transparent}
+.composer{position:relative;flex:0 0 auto;bottom:auto}
+footer{display:none}
+@media(max-width:599px){
+  .app{padding:10px 12px max(8px,env(safe-area-inset-bottom))}
+  header{padding-bottom:10px}
+  .character-console{padding:2px 0 5px}
+  .character-stage{height:190px}
+  .character-controls{gap:8px;padding-bottom:5px}
+  .character-controls button{padding:8px 12px}
+  .chat{padding-top:3px}
+}
+
 </style>
 </head>
 <body>
