@@ -216,6 +216,28 @@ footer{display:none}
   transform-origin:center;
 }
 
+.avatar-preview{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:8px 14px;
+  border-top:1px solid rgba(92,255,139,.16);
+  border-bottom:1px solid rgba(92,255,139,.16);
+  background:rgba(0,12,5,.55);
+}
+.avatar-preview-label{
+  color:rgba(186,255,202,.72);
+  font-size:11px;
+  margin-right:4px;
+}
+.avatar-preview-item{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#baffca;
+  font-size:11px;
+}
+.avatar-preview .message-avatar{flex:none}
 </style>
 </head>
 <body>
@@ -231,6 +253,11 @@ footer{display:none}
   </div>
   <div class="character-controls"><button type="button" id="expert-toggle" aria-pressed="false">ベジータを呼び出す</button><span>※ 表示演出の確認用デモ</span></div>
   </section>
+<div class="avatar-preview" aria-label="発言者アイコン調整用プレビュー">
+  <span class="avatar-preview-label">アイコン調整用プレビュー</span>
+  <div class="avatar-preview-item"><div class="message-avatar"><img src="images/dende.png" alt="デンデ"></div><span>デンデ</span></div>
+  <div class="avatar-preview-item"><div class="message-avatar"><img src="images/vegeta_transparent_final.png" alt="ベジータ"></div><span>ベジータ</span></div>
+</div>
 <section class="chat" id="chat" aria-live="polite"><div class="message"><div class="message-avatar" aria-hidden="true"><img src="images/dende.png" alt=""></div><div class="speaker">デンデ</div><div class="bubble">こんにちは。デンデです。
 知りたいことをそのまま入力してください。質問に応じて、必要な専門家を呼び出してお手伝いします。</div></div></section>
 <form class="composer" id="chat-form"><div class="composer-box"><textarea id="message-input" rows="1" maxlength="2000" placeholder="質問を入力…" aria-label="質問を入力"></textarea><button class="send" id="send-button" type="submit" aria-label="送信">↑</button></div></form>
