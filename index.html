@@ -203,17 +203,15 @@ footer{display:none}
    Shift the crop window right and upward, and keep the portrait slightly smaller. */
 .message-avatar{position:relative}
 .message-avatar img[src*="dende.png"]{
-  /* Keep the crop visible: enlarge the original image and shift it left/up
-     so the upper-right face area sits inside the circular viewport. */
+  /* Keep the enlarged portrait clipped by the avatar circle. */
   position:absolute;
-  left:-62%;
-  top:10%;
-  width:160%;
-  height:160%;
+  left:-40%;
+  top:-15%;
+  width:180%;
+  height:180%;
   max-width:none;
   max-height:none;
   object-fit:contain;
-  object-position:center;
   transform:none;
 }
 
