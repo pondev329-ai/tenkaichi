@@ -110,6 +110,19 @@ footer{text-align:center;color:var(--muted);font-size:10px;padding:14px 0 0}
 body.matrix-boost .matrix-bg{opacity:1}
 @media(max-width:599px){.character-stage{height:310px}.dende-character{width:82%;height:92%;left:9%}.character-stage.expert-mode .dende-character{transform:translateX(-4%) scale(.48)}.vegeta-character{width:72%}.character-stage.expert-mode .vegeta-character{right:0}.arrival-label{top:7px;left:6px}}
 @media(prefers-reduced-motion:reduce){.character,.digital-surge,.expert-answer{animation:none!important;transition:none!important}}
+
+/* Materialize the expert from Matrix data instead of sliding in */
+.character-stage.teleporting .digital-surge{opacity:1;animation:matrix-gather 1.65s ease-out both}
+.character-stage.teleporting .digital-surge:before{content:"";position:absolute;left:73%;top:52%;width:min(46vw,330px);aspect-ratio:1;border:2px solid rgba(108,255,160,.9);border-radius:50%;transform:translate(-50%,-50%) scale(.08);box-shadow:0 0 14px #39ff75,inset 0 0 22px rgba(57,255,117,.6);animation:arrival-ring 1.15s cubic-bezier(.12,.72,.2,1) both}
+.character-stage.teleporting .digital-surge:after{content:"";position:absolute;left:73%;top:52%;width:min(34vw,245px);aspect-ratio:1;border:1px solid rgba(190,255,210,.9);border-radius:50%;transform:translate(-50%,-50%) scale(.05);box-shadow:0 0 30px 12px rgba(57,255,117,.45);animation:arrival-ring 1.35s .12s cubic-bezier(.12,.72,.2,1) both}
+.character-stage.teleporting .vegeta-character{animation:teleport-materialize 1.55s cubic-bezier(.16,.8,.2,1) both;transition:none}
+.character-stage.teleporting .dende-character{filter:brightness(1.18) drop-shadow(0 0 12px rgba(57,255,117,.55))}
+@keyframes matrix-gather{0%{opacity:0;filter:blur(18px);transform:scale(.35)}18%{opacity:1;filter:blur(2px);transform:scale(1.08)}55%{opacity:.9;filter:blur(1px);transform:scale(1)}100%{opacity:.18;filter:blur(5px);transform:scale(1.12)}}
+@keyframes arrival-ring{0%{opacity:0;transform:translate(-50%,-50%) scale(.06)}18%{opacity:1}72%{opacity:.8}100%{opacity:0;transform:translate(-50%,-50%) scale(1.7)}}
+@keyframes teleport-materialize{0%{opacity:0;transform:translateX(0) scale(.12);filter:brightness(4) saturate(2) blur(22px);clip-path:inset(48% 48% 48% 48%)}24%{opacity:.95;transform:translateX(0) scale(.62);filter:brightness(2.8) saturate(1.8) blur(8px);clip-path:inset(8% 12% 10% 12%)}42%{opacity:.35;transform:translateX(0) scale(.78);filter:brightness(3) blur(13px);clip-path:inset(0 0 0 0)}61%{opacity:1;transform:translateX(0) scale(1.04);filter:brightness(1.9) blur(2px);clip-path:inset(0 0 0 0)}78%{opacity:.72;transform:translateX(0) scale(.99);filter:brightness(1.4) blur(4px)}100%{opacity:1;transform:translateX(0) scale(1);filter:brightness(1) saturate(1) blur(0);clip-path:inset(0 0 0 0)}}
+@media(max-width:599px){.character-stage.teleporting .digital-surge:before,.character-stage.teleporting .digital-surge:after{left:72%}}
+@media(prefers-reduced-motion:reduce){.character-stage.teleporting .vegeta-character,.character-stage.teleporting .digital-surge,.character-stage.teleporting .digital-surge:before,.character-stage.teleporting .digital-surge:after{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -159,6 +172,14 @@ form.addEventListener("submit",(event)=>{event.preventDefault();const message=in
     button.addEventListener('click',function(){
       active=!active;
       stage.classList.toggle('expert-mode',active);
+      stage.classList.remove('teleporting');
+      if(active){
+        void stage.offsetWidth;
+        stage.classList.add('teleporting');
+        window.setTimeout(()=>stage.classList.remove('teleporting'),1700);
+      }
+      matrixBoost=active;
+      document.body.classList.toggle('matrix-boost',active);
       panel.classList.toggle('expert-mode',active);
       button.setAttribute('aria-pressed',String(active));
       button.textContent=active?'デンデに戻す':'ベジータを呼び出す';
