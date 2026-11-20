@@ -200,20 +200,18 @@ footer{display:none}
 }
 
 
-/* Dende avatar: explicitly scale the previous crop down by 30 percent. */
+/* Dende avatar crop: restore the previously stable centered baseline. */
 .message-avatar img[src*="dende.png"]{
-  position:absolute !important;
-  width:215% !important;
-  height:215% !important;
-  max-width:none !important;
-  max-height:none !important;
-  left:-57.5% !important;
-  top:-30% !important;
-  display:block !important;
-  object-fit:cover !important;
-  object-position:50% 12% !important;
-  transform:translateY(-20px) scale(.7) !important;
-  transform-origin:center center !important;
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:180%;
+  height:180%;
+  max-width:none;
+  max-height:none;
+  object-fit:contain;
+  transform:translate(-50%,-50%);
+  transform-origin:center;
 }
 
 </style>
