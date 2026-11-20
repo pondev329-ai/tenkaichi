@@ -82,13 +82,49 @@ footer{text-align:center;color:var(--muted);font-size:10px;padding:14px 0 0}
   backdrop-filter:none !important;
 }
 @media(min-width:600px){.app{padding:24px 28px 36px}.intro h1{font-size:31px}.intro{padding-top:34px}}
-\n.character-stage{height:360px;display:flex;align-items:center;justify-content:center;padding:8px 0 18px;overflow:hidden}.character-stage img{display:block;height:100%;max-width:100%;width:auto;object-fit:contain;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55))}@media(max-width:599px){.character-stage{height:310px;padding:4px 0 14px}}\n</style>
+\n.character-stage{height:360px;display:flex;align-items:center;justify-content:center;padding:8px 0 18px;overflow:hidden}.character-stage img{display:block;height:100%;max-width:100%;width:auto;object-fit:contain;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55))}@media(max-width:599px){.character-stage{height:310px;padding:4px 0 14px}}\n
+/* Character transfer demo */
+.character-console{padding:8px 0 18px}
+.character-stage{height:390px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate}
+.character{position:absolute;display:flex;align-items:center;justify-content:center;transition:transform .85s cubic-bezier(.2,.8,.2,1),opacity .55s ease,filter .7s ease;will-change:transform,opacity}
+.character img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;filter:drop-shadow(0 12px 20px rgba(0,0,0,.72))}
+.dende-character{width:76%;height:94%;left:12%;bottom:0;transform:translateX(0) scale(1);transform-origin:center bottom;z-index:2}
+.vegeta-character{width:68%;height:100%;right:-18%;bottom:0;opacity:0;transform:translateX(24%) scale(.72);filter:brightness(1.5) saturate(1.2);z-index:3}
+.character-stage.expert-mode .dende-character{left:0;transform:translateX(-3%) scale(.52);transform-origin:left bottom}
+.character-stage.expert-mode .vegeta-character{right:3%;opacity:1;transform:translateX(0) scale(1);filter:brightness(1) saturate(1)}
+.digital-surge{position:absolute;inset:0;z-index:1;opacity:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 13px,rgba(35,255,112,.18) 14px,transparent 16px),radial-gradient(ellipse at 78% 55%,rgba(30,255,105,.36),transparent 48%);mix-blend-mode:screen}
+.character-stage.expert-mode .digital-surge{animation:transfer-flash 1.15s ease-out both}
+@keyframes transfer-flash{0%{opacity:0;filter:blur(14px);transform:scaleX(.2)}25%{opacity:1;filter:blur(2px);transform:scaleX(1.2)}65%{opacity:.55;filter:blur(5px)}100%{opacity:.12;filter:blur(9px)}}
+.arrival-label{position:absolute;top:10px;left:12px;z-index:5;display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid rgba(100,255,150,.4);background:rgba(0,10,4,.68);color:#8affad;font:700 10px/1.2 ui-monospace,monospace;letter-spacing:.12em;backdrop-filter:blur(8px)}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#49ff83;box-shadow:0 0 10px #49ff83}
+.character-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:0 4px 12px}
+.character-controls button{border:1px solid rgba(100,255,150,.55);background:rgba(3,22,10,.8);color:#baffca;padding:10px 15px;font-size:14px;font-weight:700;letter-spacing:.03em;box-shadow:0 0 18px rgba(35,255,112,.12);cursor:pointer}
+.character-controls button:hover{background:rgba(12,55,26,.92);box-shadow:0 0 22px rgba(35,255,112,.28)}
+.character-controls span{font-size:11px;color:var(--muted)}
+.expert-answer{display:none;margin:0 8px 14px 0;padding:13px 15px;border:1px solid rgba(65,255,130,.36);background:rgba(0,18,8,.68);box-shadow:inset 0 0 22px rgba(28,255,100,.07),0 0 18px rgba(20,255,90,.08)}
+.expert-answer strong{display:block;color:#8affad;font:700 11px ui-monospace,monospace;letter-spacing:.12em;margin-bottom:7px}
+.expert-answer p{margin:0;color:#d8ffe2;font-size:14px;line-height:1.7}
+.character-console.expert-mode .expert-answer{display:block;animation:answer-appear .55s .35s both}
+@keyframes answer-appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+body.matrix-boost .matrix-bg{opacity:1}
+@media(max-width:599px){.character-stage{height:310px}.dende-character{width:82%;height:92%;left:9%}.character-stage.expert-mode .dende-character{transform:translateX(-4%) scale(.48)}.vegeta-character{width:72%}.character-stage.expert-mode .vegeta-character{right:0}.arrival-label{top:7px;left:6px}}
+@media(prefers-reduced-motion:reduce){.character,.digital-surge,.expert-answer{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
 <canvas class="matrix-bg" id="matrix-bg" aria-hidden="true"></canvas>
 <main class="app">
 <header><div class="brand"><span class="orb" aria-hidden="true">✦</span>TENKAICHI</div></header>
-<section class="character-stage" aria-label="TENKAICHIの案内役デンデ"><img src="images/dende.png" alt="TENKAICHIの案内役デンデ" onerror="this.parentElement.hidden=true"></section>
+<section class="character-console" id="character-console" aria-label="専門家キャラクター表示">
+  <div class="character-stage" id="character-stage">
+    <div class="digital-surge" aria-hidden="true"></div>
+    <div class="character dende-character"><img src="images/dende.png" alt="案内役デンデ"></div>
+    <div class="character vegeta-character"><img src="images/vegeta_transparent_final.png" alt="専門家ベジータ"></div>
+    <div class="arrival-label" aria-live="polite"><span class="status-dot"></span><span id="character-status">DENDE / GUIDE</span></div>
+  </div>
+  <div class="character-controls"><button type="button" id="expert-toggle" aria-pressed="false">ベジータを呼び出す</button><span>※ 表示演出の確認用デモ</span></div>
+  <div class="expert-answer" id="expert-answer" aria-live="polite"><strong>ベジータの回答エリア</strong><p>専門家が登場すると、ここに回答が表示されます。</p></div>
+</section>
 <section class="chat" id="chat" aria-live="polite"><div class="welcome"><strong>こんにちは。デンデです。</strong><p>知りたいことをそのまま入力してください。質問に応じてデンデが必要な専門知識や道具を選ぶ仕組みです。</p></div></section>
 <form class="composer" id="chat-form"><div class="composer-box"><textarea id="message-input" rows="1" maxlength="2000" placeholder="質問を入力…" aria-label="質問を入力"></textarea><button class="send" id="send-button" type="submit" aria-label="送信">↑</button></div></form>
 <footer>TENKAICHI · 専門家たちが集う知識プラットフォーム</footer>
@@ -100,7 +136,27 @@ function makeMatrixColumn(){const length=Math.random()<.28?Math.floor(5+Math.ran
 function resizeMatrix(){const ratio=Math.min(window.devicePixelRatio||1,1.5);width=window.innerWidth;height=window.innerHeight;matrix.width=Math.floor(width*ratio);matrix.height=Math.floor(height*ratio);ctx.setTransform(ratio,0,0,ratio,0,0);const count=Math.ceil(width/28);columns=Array.from({length:count},()=>makeMatrixColumn());}
 function drawMatrix(){ctx.fillStyle="rgba(0,0,0,0.22)";ctx.fillRect(0,0,width,height);ctx.font='22px "SFMono-Regular",Consolas,monospace';for(let i=0;i<columns.length;i++){const col=columns[i];for(let j=0;j<col.trail.length;j++){const alpha=Math.max(.12,.78-j*.055);ctx.fillStyle="rgba(45,255,105,"+alpha+")";ctx.fillText(col.trail[j],i*28,col.y+j*24);}col.y+=col.speed;if(col.y>height+col.trail.length*24){columns[i]=makeMatrixColumn();}}if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches)frame=requestAnimationFrame(drawMatrix);}
 resizeMatrix();if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ctx.fillStyle="#000";ctx.fillRect(0,0,width,height);for(let i=0;i<columns.length;i++){ctx.fillStyle="rgba(45,255,105,.22)";ctx.font='24px monospace';ctx.fillText(Math.random()<.5?"0":"1",i*28,Math.random()*height);}}else drawMatrix();window.addEventListener("resize",()=>{cancelAnimationFrame(frame);resizeMatrix();drawMatrix();});
-function renderMessageContent(bubble,text,details){const pattern=/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)|\[(\d+)\]/g;let lastIndex=0;for(const match of text.matchAll(pattern)){const index=match.index;if(index>lastIndex)bubble.append(document.createTextNode(text.slice(lastIndex,index)));const link=document.createElement("a");if(match[2]){link.textContent=match[1];link.href=match[2];link.target="_blank";link.rel="noopener noreferrer";}else{const number=Number(match[3]);link.textContent="["+number+"]";link.className="citation-link";link.href="#reference-"+number;link.addEventListener("click",event=>{const target=details?.querySelector("#reference-"+number);if(target){event.preventDefault();details.open=true;target.scrollIntoView({behavior:"smooth",block:"center"});}});}bubble.append(link);lastIndex=index+match[0].length;}if(lastIndex<text.length)bubble.append(document.createTextNode(text.slice(lastIndex)));}function addMessage(speaker,text,isUser=false,sources=[]){const wrap=document.createElement("div");wrap.className="message"+(isUser?" user":"");const label=document.createElement("div");label.className="speaker";label.textContent=speaker;const bubble=document.createElement("div");bubble.className="bubble";const refs=!isUser?(sources||[]).filter(source=>source&&source.url&&((source.sourceType==="expert"&&source.read===true&&source.hasBody===true)||(source.sourceType==="exa"&&source.referenceable===true))):[];let details=null;if(refs.length){details=document.createElement("details");details.className="references";const summary=document.createElement("summary");summary.textContent="参照した記事（"+refs.length+"件）";const list=document.createElement("ol");list.style.listStyle="none";for(let index=0;index<refs.length;index++){const source=refs[index];const item=document.createElement("li");item.id="reference-"+(index+1);const link=document.createElement("a");link.href=source.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=source.title||source.url;item.append(document.createTextNode("["+(index+1)+"] "),link);list.append(item)}details.append(summary,list)}renderMessageContent(bubble,String(text||""),details);wrap.append(label,bubble);if(details)wrap.append(details);if(!isUser){const tools=document.createElement("div");tools.className="message-tools";const copy=document.createElement("button");copy.type="button";copy.className="copy-btn";copy.textContent="⧉";copy.setAttribute("aria-label","回答をコピー");copy.title="回答をコピー";copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(text);copy.textContent="コピーしました"}catch{copy.textContent="コピーできませんでした"} });tools.append(copy);wrap.append(tools)}chat.append(wrap);wrap.scrollIntoView({behavior:"smooth",block:"nearest"})}
+
+const characterConsole=document.getElementById("character-console");
+const characterStage=document.getElementById("character-stage");
+const expertToggle=document.getElementById("expert-toggle");
+const characterStatus=document.getElementById("character-status");
+const expertAnswer=document.getElementById("expert-answer");
+let matrixBoostTimer;
+expertToggle.addEventListener("click",()=>{
+  const active=!characterStage.classList.contains("expert-mode");
+  characterStage.classList.toggle("expert-mode",active);
+  characterConsole.classList.toggle("expert-mode",active);
+  document.body.classList.toggle("matrix-boost",active);
+  expertToggle.setAttribute("aria-pressed",String(active));
+  expertToggle.textContent=active?"デンデに戻す":"ベジータを呼び出す";
+  characterStatus.textContent=active?"VEGETA / EXPERT CONNECTED":"DENDE / GUIDE";
+  expertAnswer.querySelector("strong").textContent=active?"VEGETA / RESPONSE":"ベジータの回答エリア";
+  expertAnswer.querySelector("p").textContent=active?"フン。この質問ならオレに任せておけ。専門家が回答する際は、この位置に実際の回答が表示される。":"専門家が登場すると、ここに回答が表示されます。";
+  clearTimeout(matrixBoostTimer);
+  if(active){matrixBoostTimer=setTimeout(()=>document.body.classList.remove("matrix-boost"),1400);}
+});
+\nfunction renderMessageContent(bubble,text,details){const pattern=/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)|\[(\d+)\]/g;let lastIndex=0;for(const match of text.matchAll(pattern)){const index=match.index;if(index>lastIndex)bubble.append(document.createTextNode(text.slice(lastIndex,index)));const link=document.createElement("a");if(match[2]){link.textContent=match[1];link.href=match[2];link.target="_blank";link.rel="noopener noreferrer";}else{const number=Number(match[3]);link.textContent="["+number+"]";link.className="citation-link";link.href="#reference-"+number;link.addEventListener("click",event=>{const target=details?.querySelector("#reference-"+number);if(target){event.preventDefault();details.open=true;target.scrollIntoView({behavior:"smooth",block:"center"});}});}bubble.append(link);lastIndex=index+match[0].length;}if(lastIndex<text.length)bubble.append(document.createTextNode(text.slice(lastIndex)));}function addMessage(speaker,text,isUser=false,sources=[]){const wrap=document.createElement("div");wrap.className="message"+(isUser?" user":"");const label=document.createElement("div");label.className="speaker";label.textContent=speaker;const bubble=document.createElement("div");bubble.className="bubble";const refs=!isUser?(sources||[]).filter(source=>source&&source.url&&((source.sourceType==="expert"&&source.read===true&&source.hasBody===true)||(source.sourceType==="exa"&&source.referenceable===true))):[];let details=null;if(refs.length){details=document.createElement("details");details.className="references";const summary=document.createElement("summary");summary.textContent="参照した記事（"+refs.length+"件）";const list=document.createElement("ol");list.style.listStyle="none";for(let index=0;index<refs.length;index++){const source=refs[index];const item=document.createElement("li");item.id="reference-"+(index+1);const link=document.createElement("a");link.href=source.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=source.title||source.url;item.append(document.createTextNode("["+(index+1)+"] "),link);list.append(item)}details.append(summary,list)}renderMessageContent(bubble,String(text||""),details);wrap.append(label,bubble);if(details)wrap.append(details);if(!isUser){const tools=document.createElement("div");tools.className="message-tools";const copy=document.createElement("button");copy.type="button";copy.className="copy-btn";copy.textContent="⧉";copy.setAttribute("aria-label","回答をコピー");copy.title="回答をコピー";copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(text);copy.textContent="コピーしました"}catch{copy.textContent="コピーできませんでした"} });tools.append(copy);wrap.append(tools)}chat.append(wrap);wrap.scrollIntoView({behavior:"smooth",block:"nearest"})}
 form.addEventListener("submit",(event)=>{event.preventDefault();const message=input.value.trim();if(!message||send.disabled)return;addMessage("あなた",message,true);input.value="";addMessage("TENKAICHI","現在は画面デザイン確認用のため、回答機能には接続していません。専門家との接続は今後実装します。");input.focus()});
 </script>
 </body>
