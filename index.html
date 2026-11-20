@@ -139,6 +139,65 @@ footer{display:none}
   .chat{padding-top:3px}
 }
 
+
+/* Speaker portraits: tight face crops inside circular frames */
+.message{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr);
+  grid-template-areas:"avatar speaker" "avatar bubble" "avatar refs" "avatar tools";
+  column-gap:10px;
+  row-gap:4px;
+  max-width:92%;
+  align-self:flex-start;
+}
+.message-avatar{
+  grid-area:avatar;
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  align-self:start;
+  margin-top:2px;
+  border:1px solid rgba(92,255,139,.78);
+  background:radial-gradient(circle at 50% 35%,rgba(30,95,49,.65),rgba(0,8,3,.96));
+  box-shadow:0 0 12px rgba(57,255,117,.18),inset 0 0 8px rgba(57,255,117,.16);
+  color:#baffca;
+  font-size:21px;
+}
+.message-avatar img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:50% 12%;
+  transform:scale(2.15);
+}
+.message .speaker{grid-area:speaker;padding:0 3px}
+.message .bubble{grid-area:bubble;min-width:0}
+.message .references{grid-area:refs}
+.message .message-tools{grid-area:tools}
+.message.user{
+  grid-template-columns:minmax(0,1fr) 46px;
+  grid-template-areas:"speaker avatar" "bubble avatar";
+  align-self:flex-end;
+  align-items:initial;
+}
+.message.user .speaker{text-align:right}
+.message.user .message-avatar{
+  grid-area:avatar;
+  border-color:rgba(130,190,255,.7);
+  background:radial-gradient(circle at 50% 35%,rgba(28,60,92,.75),rgba(0,5,12,.96));
+  color:#d5eaff;
+  box-shadow:0 0 12px rgba(100,170,255,.16);
+}
+@media(max-width:599px){
+  .message{grid-template-columns:40px minmax(0,1fr);column-gap:8px;max-width:96%}
+  .message-avatar{width:40px;height:40px}
+  .message.user{grid-template-columns:minmax(0,1fr) 40px}
+}
+
 </style>
 </head>
 <body>
@@ -154,7 +213,7 @@ footer{display:none}
   </div>
   <div class="character-controls"><button type="button" id="expert-toggle" aria-pressed="false">ベジータを呼び出す</button><span>※ 表示演出の確認用デモ</span></div>
   </section>
-<section class="chat" id="chat" aria-live="polite"><div class="message"><div class="speaker">デンデ</div><div class="bubble">こんにちは。デンデです。
+<section class="chat" id="chat" aria-live="polite"><div class="message"><div class="message-avatar" aria-hidden="true"><img src="images/dende.png" alt=""></div><div class="speaker">デンデ</div><div class="bubble">こんにちは。デンデです。
 知りたいことをそのまま入力してください。質問に応じて、必要な専門家を呼び出してお手伝いします。</div></div></section>
 <form class="composer" id="chat-form"><div class="composer-box"><textarea id="message-input" rows="1" maxlength="2000" placeholder="質問を入力…" aria-label="質問を入力"></textarea><button class="send" id="send-button" type="submit" aria-label="送信">↑</button></div></form>
 <footer>TENKAICHI · 専門家たちが集う知識プラットフォーム</footer>
@@ -168,7 +227,72 @@ function drawMatrix(){ctx.fillStyle="rgba(0,0,0,0.22)";ctx.fillRect(0,0,width,he
 resizeMatrix();if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ctx.fillStyle="#000";ctx.fillRect(0,0,width,height);for(let i=0;i<columns.length;i++){ctx.fillStyle="rgba(45,255,105,.22)";ctx.font='24px monospace';ctx.fillText(Math.random()<.5?"0":"1",i*28,Math.random()*height);}}else drawMatrix();window.addEventListener("resize",()=>{cancelAnimationFrame(frame);resizeMatrix();drawMatrix();});
 
 
-function renderMessageContent(bubble,text,details){const pattern=/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)|\[(\d+)\]/g;let lastIndex=0;for(const match of text.matchAll(pattern)){const index=match.index;if(index>lastIndex)bubble.append(document.createTextNode(text.slice(lastIndex,index)));const link=document.createElement("a");if(match[2]){link.textContent=match[1];link.href=match[2];link.target="_blank";link.rel="noopener noreferrer";}else{const number=Number(match[3]);link.textContent="["+number+"]";link.className="citation-link";link.href="#reference-"+number;link.addEventListener("click",event=>{const target=details?.querySelector("#reference-"+number);if(target){event.preventDefault();details.open=true;target.scrollIntoView({behavior:"smooth",block:"center"});}});}bubble.append(link);lastIndex=index+match[0].length;}if(lastIndex<text.length)bubble.append(document.createTextNode(text.slice(lastIndex)));}function addMessage(speaker,text,isUser=false,sources=[]){const wrap=document.createElement("div");wrap.className="message"+(isUser?" user":"");const label=document.createElement("div");label.className="speaker";label.textContent=speaker;const bubble=document.createElement("div");bubble.className="bubble";const refs=!isUser?(sources||[]).filter(source=>source&&source.url&&((source.sourceType==="expert"&&source.read===true&&source.hasBody===true)||(source.sourceType==="exa"&&source.referenceable===true))):[];let details=null;if(refs.length){details=document.createElement("details");details.className="references";const summary=document.createElement("summary");summary.textContent="参照した記事（"+refs.length+"件）";const list=document.createElement("ol");list.style.listStyle="none";for(let index=0;index<refs.length;index++){const source=refs[index];const item=document.createElement("li");item.id="reference-"+(index+1);const link=document.createElement("a");link.href=source.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=source.title||source.url;item.append(document.createTextNode("["+(index+1)+"] "),link);list.append(item)}details.append(summary,list)}renderMessageContent(bubble,String(text||""),details);wrap.append(label,bubble);if(details)wrap.append(details);if(!isUser){const tools=document.createElement("div");tools.className="message-tools";const copy=document.createElement("button");copy.type="button";copy.className="copy-btn";copy.textContent="⧉";copy.setAttribute("aria-label","回答をコピー");copy.title="回答をコピー";copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(text);copy.textContent="コピーしました"}catch{copy.textContent="コピーできませんでした"} });tools.append(copy);wrap.append(tools)}chat.append(wrap);wrap.scrollIntoView({behavior:"smooth",block:"nearest"})}
+function renderMessageContent(bubble,text,details){const pattern=/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)|\[(\d+)\]/g;let lastIndex=0;for(const match of text.matchAll(pattern)){const index=match.index;if(index>lastIndex)bubble.append(document.createTextNode(text.slice(lastIndex,index)));const link=document.createElement("a");if(match[2]){link.textContent=match[1];link.href=match[2];link.target="_blank";link.rel="noopener noreferrer";}else{const number=Number(match[3]);link.textContent="["+number+"]";link.className="citation-link";link.href="#reference-"+number;link.addEventListener("click",event=>{const target=details?.querySelector("#reference-"+number);if(target){event.preventDefault();details.open=true;target.scrollIntoView({behavior:"smooth",block:"center"});}});}bubble.append(link);lastIndex=index+match[0].length;}if(lastIndex<text.length)bubble.append(document.createTextNode(text.slice(lastIndex)));}function createSpeakerAvatar(speaker,isUser){
+  const avatar=document.createElement("div");
+  avatar.className="message-avatar";
+  avatar.setAttribute("aria-hidden","true");
+  if(isUser){avatar.textContent="👤";return avatar;}
+  let src=null;
+  if(String(speaker).includes("ベジータ"))src="images/vegeta_transparent_final.png";
+  else if(String(speaker).includes("デンデ"))src="images/dende.png";
+  if(src){const img=document.createElement("img");img.src=src;img.alt="";avatar.append(img);}
+  else avatar.textContent="✦";
+  return avatar;
+}
+function addMessage(speaker,text,isUser=false,sources=[]){
+  const wrap=document.createElement("div");
+  wrap.className="message"+(isUser?" user":"");
+  const avatar=createSpeakerAvatar(speaker,isUser);
+  const label=document.createElement("div");
+  label.className="speaker";
+  label.textContent=speaker;
+  const bubble=document.createElement("div");
+  bubble.className="bubble";
+  const refs=!isUser?(sources||[]).filter(source=>source&&source.url&&((source.sourceType==="expert"&&source.read===true&&source.hasBody===true)||(source.sourceType==="exa"&&source.referenceable===true))):[];
+  let details=null;
+  if(refs.length){
+    details=document.createElement("details");
+    details.className="references";
+    const summary=document.createElement("summary");
+    summary.textContent="参照した記事（"+refs.length+"件）";
+    const list=document.createElement("ol");
+    list.style.listStyle="none";
+    for(let index=0;index<refs.length;index++){
+      const source=refs[index];
+      const item=document.createElement("li");
+      item.id="reference-"+(index+1);
+      const link=document.createElement("a");
+      link.href=source.url;
+      link.target="_blank";
+      link.rel="noopener noreferrer";
+      link.textContent=source.title||source.url;
+      item.append(document.createTextNode("["+(index+1)+"] "),link);
+      list.append(item);
+    }
+    details.append(summary,list);
+  }
+  renderMessageContent(bubble,String(text||""),details);
+  wrap.append(avatar,label,bubble);
+  if(details)wrap.append(details);
+  if(!isUser){
+    const tools=document.createElement("div");
+    tools.className="message-tools";
+    const copy=document.createElement("button");
+    copy.type="button";
+    copy.className="copy-btn";
+    copy.textContent="⧉";
+    copy.setAttribute("aria-label","回答をコピー");
+    copy.title="回答をコピー";
+    copy.addEventListener("click",async()=>{
+      try{await navigator.clipboard.writeText(text);copy.textContent="コピーしました";}
+      catch{copy.textContent="コピーできませんでした";}
+    });
+    tools.append(copy);
+    wrap.append(tools);
+  }
+  chat.append(wrap);
+  wrap.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
 form.addEventListener("submit",(event)=>{event.preventDefault();const message=input.value.trim();if(!message||send.disabled)return;addMessage("あなた",message,true);input.value="";addMessage("TENKAICHI","現在は画面デザイン確認用のため、回答機能には接続していません。専門家との接続は今後実装します。");input.focus()});
 </script>
 
