@@ -200,7 +200,7 @@ footer{display:none}
 }
 
 
-/* Dende avatar crop: restore the previously stable centered baseline. */
+/* Dende avatar crop: move the image up 10px from the centered baseline. */
 .message-avatar img[src*="dende.png"]{
   position:absolute;
   left:50%;
@@ -210,7 +210,7 @@ footer{display:none}
   max-width:none;
   max-height:none;
   object-fit:contain;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%,calc(-50% - 10px));
   transform-origin:center;
 }
 
