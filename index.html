@@ -368,7 +368,7 @@ form.addEventListener("submit",(event)=>{event.preventDefault();const message=in
       document.body.classList.toggle('matrix-boost',active);
       button.setAttribute('aria-pressed',String(active));
       button.textContent=active?'デンデに戻す':'ベジータを呼び出す';
-      status.textContent=active?'VEGETA / EXPERT CONNECTED':'DENDE / GUIDE';
+      status.textContent=active?'VEGETA / EXPERT':'DENDE / GUIDE';
       document.documentElement.classList.toggle('expert-mode-active',active);
       const canvas=document.getElementById('matrix-bg');
       if(canvas) canvas.style.opacity=active?'1':'.78';
