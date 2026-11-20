@@ -198,6 +198,14 @@ footer{display:none}
   .message.user{grid-template-columns:minmax(0,1fr) 40px}
 }
 
+
+/* Dende's face sits higher in the original portrait, so crop from the upper area */
+.message-avatar img[src*="dende.png"]{
+  object-position:50% 18%;
+  transform:scale(2.35);
+  transform-origin:50% 18%;
+}
+
 </style>
 </head>
 <body>
