@@ -82,14 +82,13 @@ footer{text-align:center;color:var(--muted);font-size:10px;padding:14px 0 0}
   backdrop-filter:none !important;
 }
 @media(min-width:600px){.app{padding:24px 28px 36px}.intro h1{font-size:31px}.intro{padding-top:34px}}
-</style>
+\n.character-stage{height:360px;display:flex;align-items:center;justify-content:center;padding:8px 0 18px;overflow:hidden}.character-stage img{display:block;height:100%;max-width:100%;width:auto;object-fit:contain;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55))}@media(max-width:599px){.character-stage{height:310px;padding:4px 0 14px}}\n</style>
 </head>
 <body>
 <canvas class="matrix-bg" id="matrix-bg" aria-hidden="true"></canvas>
 <main class="app">
 <header><div class="brand"><span class="orb" aria-hidden="true">✦</span>TENKAICHI</div></header>
-<section class="intro"><p class="eyebrow">YOUR EXPERT GUIDE</p><h1>質問をどうぞ。専門家はデンデが呼びます。</h1><p>質問の内容に合わせて、担当する専門家につなぐ仕組みを作っています。</p></section>
-<div class="notice">現在はTENKAICHIの画面デザインを開発中です。質問への回答機能や専門家との接続は、まだ有効になっていません。</div>
+<section class="character-stage" aria-label="TENKAICHIの案内役デンデ"><img src="images/dende.png" alt="TENKAICHIの案内役デンデ" onerror="this.parentElement.hidden=true"></section>
 <section class="chat" id="chat" aria-live="polite"><div class="welcome"><strong>こんにちは。デンデです。</strong><p>知りたいことをそのまま入力してください。質問に応じてデンデが必要な専門知識や道具を選ぶ仕組みです。</p></div></section>
 <form class="composer" id="chat-form"><div class="composer-box"><textarea id="message-input" rows="1" maxlength="2000" placeholder="質問を入力…" aria-label="質問を入力"></textarea><button class="send" id="send-button" type="submit" aria-label="送信">↑</button></div></form>
 <footer>TENKAICHI · 専門家たちが集う知識プラットフォーム</footer>
