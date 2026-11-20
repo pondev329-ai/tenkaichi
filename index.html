@@ -202,6 +202,7 @@ footer{display:none}
 
 /* Dende avatar: one dedicated rule controls its crop and position. */
 .message-avatar img[src*="dende.png"]{
+  --dende-avatar-x:10px;
   --dende-avatar-y:20px;
   position:absolute;
   left:50%;
@@ -211,7 +212,7 @@ footer{display:none}
   max-width:none;
   max-height:none;
   object-fit:contain;
-  transform:translate(-50%,calc(-50% + var(--dende-avatar-y)));
+  transform:translate(calc(-50% + var(--dende-avatar-x)),calc(-50% + var(--dende-avatar-y)));
   transform-origin:center;
 }
 
