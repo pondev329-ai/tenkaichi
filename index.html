@@ -201,20 +201,20 @@ footer{display:none}
 
 /* Dende's face is toward the upper-right of the source image.
    Shift the crop window right and upward, and keep the portrait slightly smaller. */
+.message-avatar{position:relative}
 .message-avatar img[src*="dende.png"]{
-  /* The head is in the upper-middle/right of the full illustration.
-     Zoom into that area so the circular avatar shows the face, not the shell or robe. */
+  /* Keep the crop visible: enlarge the original image and shift it left/up
+     so the upper-right face area sits inside the circular viewport. */
   position:absolute;
-  left:50%;
-  top:50%;
-  width:140%;
-  height:140%;
+  left:-62%;
+  top:10%;
+  width:160%;
+  height:160%;
   max-width:none;
   max-height:none;
   object-fit:contain;
   object-position:center;
-  transform:translate(-82%,-8%) scale(1.08);
-  transform-origin:center;
+  transform:none;
 }
 
 </style>
